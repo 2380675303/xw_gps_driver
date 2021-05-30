@@ -1,0 +1,8 @@
+<launch>
+  <node name="gps_driver" pkg="gps_driver" type="gps_driver_node" output="screen" >
+    <param name="gps_device" value="/dev/GI5610" />
+    <param name="baud" value="115200" />
+    <param name="framerate" value="50" />
+    <param name="isVerif" value="false" />
+  </node>
+</launch>
