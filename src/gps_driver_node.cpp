@@ -74,7 +74,7 @@ namespace gps_driver {
             navsatfixPub_ = node_.advertise<sensor_msgs::NavSatFix>("/gps/fix", 1000);
             sensorgpsPub_ = node_.advertise<sleipnir_msgs::sensorgps>("/sensorgps", 1000);
             imuPub_ =node_.advertise<sensor_msgs::Imu>("/imu/data",1000);
-//    ros::Rate loop_rate(this->framerate_);
+   ros::Rate loop_rate(this->framerate_);
             boost::array<double, 9> position_covariance = {0, 0, 0, 0, 0, 0, 0, 0, 0};
             while (node_.ok()) {
                 if (gps_.is_running()) {
@@ -201,7 +201,7 @@ namespace gps_driver {
                     // navsatfixPub_.publish(navSatFix_);
                 }
                 ros::spinOnce();
-//      loop_rate.sleep();
+     loop_rate.sleep();
             }
             return true;
         }
