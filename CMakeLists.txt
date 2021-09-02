@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.02)
 project(gps_driver)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14") 
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
@@ -29,7 +29,7 @@ find_package(PkgConfig REQUIRED)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES ${PROJECT_NAME}
+  LIBRARIES gps_driver
 )
 
 ###########
@@ -40,31 +40,13 @@ include_directories(include
   ${catkin_INCLUDE_DIRS}
 )
 
-# ## Build the library
-add_library(${PROJECT_NAME} src/gps_driver.cpp src/imu_driver.cpp)
-target_link_libraries(${PROJECT_NAME}
-  ${catkin_LIBRARIES}
+## gps节点： sensorgps
+add_executable(gps_driver_node 
+  src/gps_driver_node.cpp
+  src/gps_driver.cpp
+  src/util.cpp
 )
-
-## gps节点1： NavSatFix
-add_executable(${PROJECT_NAME}_stardard_node src/gps_driver_stardard_node.cpp)
-target_link_libraries(${PROJECT_NAME}_stardard_node
-  ${PROJECT_NAME}
-  ${catkin_LIBRARIES}
-)
-
-## gps节点2： sensorgps
-add_executable(${PROJECT_NAME}_node src/gps_driver_node.cpp)
-target_link_libraries(${PROJECT_NAME}_node
-  ${PROJECT_NAME}
-  ${catkin_LIBRARIES}
-)
-
-
-## gps节点1： sensorgps to NavSatFix
-add_executable(sensorgps2NavSatFix src/sensorgps2NavSatFix.cpp)
-target_link_libraries(sensorgps2NavSatFix
-  ${PROJECT_NAME}
+target_link_libraries(gps_driver_node
   ${catkin_LIBRARIES}
 )
 
@@ -73,19 +55,7 @@ target_link_libraries(sensorgps2NavSatFix
 #############
 
 ## Mark executables and/or libraries for installation
-install(TARGETS ${PROJECT_NAME}_node ${PROJECT_NAME}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-)
-
-## Mark executables and/or libraries for installation
-install(TARGETS ${PROJECT_NAME}_stardard_node ${PROJECT_NAME}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-)
-
-## Mark executables and/or libraries for installation
-install(TARGETS sensorgps2NavSatFix ${PROJECT_NAME}
+install(TARGETS gps_driver_node 
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )
@@ -96,7 +66,7 @@ install(DIRECTORY launch/
   FILES_MATCHING PATTERN "*.launch"
 )
 
-install(DIRECTORY include/${PROJECT_NAME}/
+install(DIRECTORY include/gps_driver/
    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
    FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
 )

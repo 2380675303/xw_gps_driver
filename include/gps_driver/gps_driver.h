@@ -2,78 +2,41 @@
 #define GPS_DRIVER_H
 
 #include <ros/ros.h>
-#include <string>
-#include <sstream>
 #include <serial/serial.h>
+#include <string>
 
-namespace gps_driver {
+#include "gps_driver/util.h"
 
-class GPSDriver {
- public:
-
-  struct GPSStatus{
-      double timestamp;
-      float heading;
-      float pitch;
-      float roll;
-      double lat;
-      double lon;
-      float alt;
-      float ve;
-      float vn;
-      float vu;
-      float baseline;
-      int nsv1;
-      int nsv2;
-      char status;
-  };
-
-  struct IMUData
-  {
-      double timestamp;
-      double gyroX;
-      double gyroY;
-      double gyroZ;
-      double accX;
-      double accY;
-      double accZ;
-      float tpr;
-  };
-
-  IMUData imuData_;
-
-  struct GPSStatus gpsStatus_;
-  serial::Serial ser_;
-  int baud_;
-  std::string eof_;
-  bool isVerif_; //是否校验
-
-  GPSDriver();
-  ~GPSDriver();
+namespace gps_driver
+{
+class GpsDriver
+{
+public:
+  GpsDriver();
+  ~GpsDriver();
 
   // start
   void start(const std::string& dev, int baud, bool isVerif);
   // shutdown
   void shutdown(void);
   bool is_running(void);
-  struct GPSStatus read_data(void);
-  int read_data(std::vector<std::string>& tokens);
   void write_data(std::string str);
-  void decodeGPRMC(std::vector<std::string> tokens);
-  void decodeGPFPD(std::vector<std::string> tokens);
-  void decodeGTIMU(std::vector<std::string> tokens);
-
- private:
- 
-  int fd_;
-  std::string gps_dev_;
   void close_device(void);
   void open_device(std::string gps_dev_, int baud);
   bool verif(const std::string& s);
+  gps_driver::GP_DATA_t read_data(std::vector<std::string>& msg);
+  GpsStatus_t decodeGPRMC(const std::vector<std::string>& msg);
+  GpsStatus_t decodeGPFPD(const std::vector<std::string>& msg);
+  ImuData_t decodeGTIMU(const std::vector<std::string>& msg);
+
+private:
+  int fd_;
+  std::string gps_dev_;
+  serial::Serial ser_;
+  int baud_;
+  std::string eof_;
+  bool isVerif_;  //是否校验
 };
-
-}
-
+}  // namespace gps_driver
 
 #endif
-
