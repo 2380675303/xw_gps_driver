@@ -9,7 +9,6 @@
 #include <ros/ros.h>
 #include <sensor_msgs/Imu.h>
 #include <sensor_msgs/NavSatFix.h>
-#include <sleipnir_msgs/sensorgps.h>
 #include <tf/transform_broadcaster.h>
 #include <tf/transform_datatypes.h>
 
@@ -38,7 +37,6 @@ bool GpsDriverNode::spin()
 {
   float vel = 0;
   navsatfixPub_ = node_.advertise<sensor_msgs::NavSatFix>("/gps/fix", 1000);
-  sensorgpsPub_ = node_.advertise<sleipnir_msgs::sensorgps>("/sensorgps", 1000);
   imuPub_ = node_.advertise<sensor_msgs::Imu>("/imu/data", 1000);
   ros::Rate loop_rate(this->framerate_);
   while (node_.ok())
@@ -51,13 +49,9 @@ bool GpsDriverNode::spin()
       {
         case GP_DATA_t::GPFPD:
         {
-          sleipnir_msgs::sensorgps sensorgps_msg;
           sensor_msgs::NavSatFix navSatFix_msg;
 
           gps_status_ = gps_.decodeGPFPD(raw_msg);
-          parseSensorGps(gps_status_, sensorgps_msg);
-          sensorgpsPub_.publish(sensorgps_msg);
-
           parseNavSatFix(gps_status_, navSatFix_msg);
           navsatfixPub_.publish(navSatFix_msg);
           break;
@@ -83,32 +77,6 @@ bool GpsDriverNode::spin()
     }
   }
   return true;
-}
-
-void GpsDriverNode::parseSensorGps(const GpsStatus_t& status, sleipnir_msgs::sensorgps& sensorgps_msg)
-{
-  double vel = sqrt(status.ve * status.ve + status.vn * status.vn + status.vu * status.vu);
-  geographic_msgs::GeoPoint ll;
-  ll.latitude = status.lat;
-  ll.longitude = status.lon;
-  ll.altitude = status.alt;
-  geodesy::UTMPoint pt(ll);
-
-  sensorgps_msg.x = pt.easting;
-  sensorgps_msg.y = pt.northing;
-  sensorgps_msg.lat = status.lat;
-  sensorgps_msg.lon = status.lon;
-  sensorgps_msg.alt = status.alt;
-  // left hand
-  sensorgps_msg.heading = status.heading;
-  sensorgps_msg.pitch = status.pitch;
-  sensorgps_msg.roll = -status.roll;
-  sensorgps_msg.velocity = vel;
-  sensorgps_msg.status = status.status;
-  sensorgps_msg.satenum = status.nsv1 + status.nsv2;
-  sensorgps_msg.header.stamp = ros::Time(status.timestamp);
-  // sensorgps_msg.header.stamp = ros::Time::now();
-  sensorgps_msg.header.frame_id = "gps";
 }
 
 void GpsDriverNode::parseNavSatFix(const GpsStatus_t& status, sensor_msgs::NavSatFix& navSatFix_msg)

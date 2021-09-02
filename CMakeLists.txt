@@ -13,7 +13,6 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   tf
   serial
-  sleipnir_msgs
   geodesy
 )
 
@@ -40,7 +39,6 @@ include_directories(include
   ${catkin_INCLUDE_DIRS}
 )
 
-## gps节点： sensorgps
 add_executable(gps_driver_node 
   src/gps_driver_node.cpp
   src/gps_driver.cpp

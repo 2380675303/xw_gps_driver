@@ -1,4 +1,0 @@
-gps驱动及utm坐标转换程序 
- 
-依赖:
-sudo apt install libproj-dev

@@ -1,6 +1,6 @@
 <package>
   <name>gps_driver</name>
-  <version>0.0.1</version>
+  <version>0.1.0</version>
   <description>gps_driver</description>
 
   <maintainer email="757238407@qq.com">chen sijie</maintainer>
@@ -17,12 +17,10 @@
   <build_depend>serial</build_depend> 
   <build_depend>geodesy</build_depend> 
   <build_depend>sensor_msgs</build_depend> 
-  <build_depend>sleipnir_msgs</build_depend>
 
   <run_depend>roscpp</run_depend> 
   <run_depend>std_msgs</run_depend> 
   <run_depend>std_srvs</run_depend> 
   <run_depend>geodesy</run_depend> 
   <run_depend>sensor_msgs</run_depend> 
-  <run_depend>sleipnir_msgs</run_depend> 
 </package>
