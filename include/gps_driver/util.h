@@ -3,7 +3,7 @@
 
 #include <string.h>
 
-namespace gps_driver
+namespace util
 {
 typedef enum
 {
@@ -13,35 +13,6 @@ typedef enum
   GTIMU = 2
 } GP_DATA_t;
 
-typedef struct GpsStatus
-{
-  double timestamp;
-  float heading;
-  float pitch;
-  float roll;
-  double lat;
-  double lon;
-  float alt;
-  float ve;
-  float vn;
-  float vu;
-  float baseline;
-  int nsv1;
-  int nsv2;
-  char status;
-} GpsStatus_t;
-
-typedef struct ImuData
-{
-  double timestamp;
-  double gyroX;
-  double gyroY;
-  double gyroZ;
-  double accX;
-  double accY;
-  double accZ;
-  float tpr;
-} ImuData_t;
 
 void split(const std::string& s, std::vector<std::string>& tokens, char delim);
 

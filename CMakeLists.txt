@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.02)
 project(gps_driver)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14") 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}") 
 set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_CXX_STANDARD 20)
+
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
@@ -43,7 +45,11 @@ add_executable(gps_driver_node
   src/gps_driver_node.cpp
   src/gps_driver.cpp
   src/util.cpp
+  src/gpfpd.cpp
+  src/gprmc.cpp
+  src/gtimu.cpp
 )
+
 target_link_libraries(gps_driver_node
   ${catkin_LIBRARIES}
 )

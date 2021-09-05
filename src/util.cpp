@@ -2,7 +2,7 @@
 #include <string>
 #include <math.h>
 
-namespace gps_driver
+namespace util
 {
 /**
  * @brief 字符分割
